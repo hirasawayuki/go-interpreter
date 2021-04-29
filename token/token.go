@@ -30,7 +30,7 @@ const (
 	// 終端
 	EOF = "EOF"
 
-	//識別子、リテラル
+	// 識別子、リテラル
 	IDENT = "IDENT"
 	INT   = "INT"
 

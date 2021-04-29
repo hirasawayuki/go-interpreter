@@ -530,7 +530,7 @@ func TestFunctionParameterParging(t *testing.T) {
 		expectedParams []string
 	}{
 		{input: "fn() {};", expectedParams: []string{}},
-		{input: "fn(x) {};", expectedParams: []string{}},
+		{input: "fn(x) {};", expectedParams: []string{"x"}},
 		{input: "fn(x, y, z) {};", expectedParams: []string{"x", "y", "z"}},
 	}
 

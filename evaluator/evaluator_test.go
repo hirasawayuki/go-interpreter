@@ -4,6 +4,7 @@ import (
 	"go-interpreter/lexer"
 	"go-interpreter/object"
 	"go-interpreter/parser"
+	"reflect"
 	"testing"
 )
 
@@ -337,6 +338,11 @@ func TestBuiltinFunction(t *testing.T) {
 		{`len("hello world")`, 11},
 		{`len(1)`, "argument to `len` not supported, got=INTEGER"},
 		{`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
+		{`len([1, 2, 3])`, 3},
+		{`first([1, 2, 3])`, 1},
+		{`last([1, 2, 3])`, 3},
+		{`rest([1, 2, 3])`, []int64{2, 3}},
+		{`push([1, 2, 3], 4)`, []int64{1, 2, 3, 4}},
 	}
 
 	for _, tt := range tests {
@@ -353,6 +359,20 @@ func TestBuiltinFunction(t *testing.T) {
 
 			if errObj.Message != expected {
 				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+			}
+		case []int64:
+			obj, ok := evaluated.(*object.Array)
+			if !ok {
+				t.Errorf("object is not Array. got=%T (%+v)", evaluated, evaluated)
+			}
+
+			result := []int64{}
+			for _, element := range obj.Elements {
+				result = append(result, element.(*object.Integer).Value)
+			}
+
+			if !reflect.DeepEqual(result, expected) {
+				t.Errorf("array has wrong elements. expected=%T (%+v) but got=%T (%+v)", expected, expected, result, result)
 			}
 		}
 	}
